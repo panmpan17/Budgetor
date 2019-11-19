@@ -9,30 +9,46 @@
 import SwiftUI
 
 struct ContentView: View {
+    var viewingDate : Date
+    var focusedAccount : Account
+    @ObservedObject var budgetsStore : BudgetStore
+
     init() {
+        viewingDate = Date()
+//        DataController.DestroyAll()
+        DataController.Initial()
+        focusedAccount = DataController.accountDatas[0];
+        budgetsStore = BudgetStore(budgets: DataController.GetAccountBudget(accountUUID: focusedAccount.id!))
+        SetupUI()
+    }
+    
+    func SetupUI() {
         // To remove only extra separators below the list:
         UITableView.appearance().tableFooterView = UIView()
 
         // To remove all separators including the actual ones:
         UITableView.appearance().separatorStyle = .none
         UITableView.appearance().backgroundColor = UIColor(red: 0.7, green: 0.2, blue: 0.15, alpha: 1)
-        
-        DataController.Initial()
-//        View.appea
     }
 
     var body: some View {
         VStack(spacing: 6) {
-            HeaderView(viewingDate: Date(), account: AccountStruct(name: "Card"))
+            HeaderView(self)
             
             List {
-                ForEach (DataController.GetAllBudget(), id: \.id) { budget in
+                ForEach (budgetsStore.budgets, id: \.id) { budget in
                     BudgetRow(budget: budget)
                 }
-            }
+            } //.onAppear {
+//                self.budgets = DataController.GetAccountBudget(accountUUID: self.focusedAccount.id!)
+//            }
             
-            BottomBar()
+            BottomBar(self)
         }.background(Color(red: 0.7, green: 0.2, blue: 0.15))
+    }
+    
+    func AddBudget(account: UUID, amount: Int) {
+        budgetsStore.budgets.append(DataController.AddBudget(account: account, amount: amount))
     }
 }
 

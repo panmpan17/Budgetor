@@ -10,7 +10,24 @@ import SwiftUI
 
 struct HeaderView: View {
     var viewingDate : Date
-    var account : AccountStruct
+    var focusedAccount : Account
+//    var contentView : ContentView
+
+    init() {
+        viewingDate = Date()
+        DataController.Initial()
+        focusedAccount = DataController.accountDatas[0]
+    }
+    init(_ parentView: ContentView) {
+//        contentView = parentView
+        viewingDate = parentView.viewingDate
+        focusedAccount = parentView.focusedAccount
+    }
+//    init(defaultAccount: Account) {
+//        viewingDate = Date()
+//        DataController.Initial()
+////        account = defaultAccount;
+//    }
     
     var FormatedDate : String {
         let dateFormatter = DateFormatter()
@@ -28,7 +45,7 @@ struct HeaderView: View {
             }
             Spacer()
             Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                Text(account.name).font(.title).foregroundColor(Color.white)
+                Text(focusedAccount.name!).font(.title).foregroundColor(Color.white)
             }
         }.padding().background(Color(red: 0.8, green: 0.3, blue: 0.2))
     }
@@ -36,6 +53,6 @@ struct HeaderView: View {
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView(viewingDate: Date(), account: AccountStruct(name: "Card"))
+        HeaderView()
     }
 }

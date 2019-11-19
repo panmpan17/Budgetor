@@ -21,6 +21,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Create the SwiftUI view that provides the window contents.
         UITableView.appearance().separatorColor = .clear
+
+        DataController.DestroyAll()
+        DataController.SetupTestingData()
+        DataController.Initial()
         let contentView = ContentView()
 
         // Use a UIHostingController as window root view controller.

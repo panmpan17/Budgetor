@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct BudgetRow: View {
-    var budget : BudgetStruct
+    var budget : Budget
     
     var body: some View {
         HStack {
             Button (action: {}) {
                 HStack {
-                    Image(budget.type.icon).resizable().frame(maxWidth: 15, maxHeight: 15).aspectRatio(contentMode: .fit).foregroundColor(Color.white)
-                    Text(budget.type.description)
+                    Image("add").resizable().frame(maxWidth: 15, maxHeight: 15).aspectRatio(contentMode: .fit).foregroundColor(Color.white)
+                    Text("Lunch")
                         .font(.headline).foregroundColor(Color.white)
                     Spacer()
                     Text("$ " + String(budget.amount)).font(.subheadline).foregroundColor(Color.white)
@@ -28,6 +28,7 @@ struct BudgetRow: View {
 
 struct BudgetRow_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetRow(budget: BudgetStruct(type: BudgetType.Lunch, amount: 100))
+//        BudgetRow(budget: BudgetStruct.New(account: UUID(), type: BudgetType.Lunch, amount: 100))
+        Text("Test")
     }
 }

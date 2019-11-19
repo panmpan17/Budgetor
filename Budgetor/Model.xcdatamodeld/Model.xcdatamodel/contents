@@ -5,17 +5,15 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="target_budget" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="999999" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="budgets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Budget" inverseName="relationship" inverseEntity="Budget"/>
     </entity>
     <entity name="Budget" representedClassName="Budget" syncable="YES" codeGenerationType="class">
         <attribute name="account" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="amount" attributeType="Integer 16" minValueString="0" maxValueString="99999" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="created" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <relationship name="relationship" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="budgets" inverseEntity="Account"/>
     </entity>
     <elements>
-        <element name="Account" positionX="168.98046875" positionY="-65.51953125" width="129.3828125" height="118"/>
-        <element name="Budget" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Account" positionX="168.98046875" positionY="-65.51953125" width="129.3828125" height="103"/>
+        <element name="Budget" positionX="-63" positionY="-18" width="128" height="103"/>
     </elements>
 </model>

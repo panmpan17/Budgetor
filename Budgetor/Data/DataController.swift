@@ -30,28 +30,13 @@ enum BudgetType {
     }
 }
 
-struct BudgetStruct : Identifiable {
-    var id = UUID()
-    var type : BudgetType
-    var amount : Int
-}
-
-struct AccountStruct {
-    var name : String
-}
-
-
 class DataController {
-    static func GetAllBudget() -> [BudgetStruct] {
-        let list = [
-            BudgetStruct(type: BudgetType.Breakfast, amount: 45),
-        ]
-        
-        return list;
-    }
-    
+    static var accountDatas : [Account] = [];
+    static var budget_dict : Dictionary<UUID, [Budget]> = [:]
+    static var initialed : Bool = false
+
     static var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Easy_Record")
+        let container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -59,39 +44,111 @@ class DataController {
         })
         return container
     }()
+
+    static func GetAccountBudget(accountUUID: UUID) -> [Budget] {
+        if budget_dict[accountUUID] == nil {
+            budget_dict[accountUUID] = []
+        }
+        return budget_dict[accountUUID]!;
+    }
     
-    static func Initial() {
+    static func Save() {
         let context = persistentContainer.viewContext
-        
-        do {
-            print(1)
-            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Account")
-            
-            //request.sortDescriptors = [NSSortDescriptor(key: "created", ascending: false)]
-            
-            let accounts = try context.fetch(request) as! [Account]
-            print(accounts.count)
-        } catch let error {
-            print("My Error \(error), \(error.localizedDescription)")
-            
-//            let defaultAccount = Account(context: context)
-//            defaultAccount.id = UUID()
-//            defaultAccount.created = Date()
-//            defaultAccount.name = "Default"
-//            context.insert(defaultAccount)
-//            print("inserted")
-            let accountEntity = NSEntityDescription.entity(forEntityName: "Account", in: context)!
-            
-            let defaultAccount = NSManagedObject(entity: accountEntity, insertInto: context)
-            defaultAccount.setValue(UUID(), forKey: "id")
-            defaultAccount.setValue(Date(), forKey: "created")
-            defaultAccount.setValue("Default", forKey: "name")
-            
+        if context.hasChanges {
             do {
                 try context.save()
             } catch let error as NSError {
-                print("Could not save. \(error), \(error.userInfo)")
+                print("Error: \(error), \(error.userInfo)")
             }
+        } else {
+            print("has no change")
         }
+    }
+
+    static func CreateDefaultAccount() {
+        let context = persistentContainer.viewContext
+
+        let defaultAccount = Account(context: context)
+        defaultAccount.id = UUID()
+        defaultAccount.created = Date()
+        defaultAccount.name = "Default"
+        context.insert(defaultAccount)
+        accountDatas.append(defaultAccount)
+        print("Created 'Default' account '\(defaultAccount.id!)'")
+        Save()
+    }
+
+    static func DestroyAll() {
+        initialed = false
+        let context = persistentContainer.viewContext
+
+        let accountRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Account")
+        let budgetRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Budget")
+
+        do {
+            let accounts = try context.fetch(accountRequest) as! [Account]
+            let budgets = try context.fetch(budgetRequest) as! [Budget]
+
+            for account in accounts {
+                context.delete(account)
+            }
+            for budget in budgets {
+                context.delete(budget)
+            }
+            
+            try context.save()
+        } catch let error {
+            print(error)
+        }
+    }
+
+    static func SetupTestingData() {
+
+    }
+
+    static func Initial() {
+        if initialed { return }
+        initialed = true
+        let context = persistentContainer.viewContext
+        
+        do {
+            let accountRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Account")
+            let budgetRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Budget")
+
+            accountDatas = try context.fetch(accountRequest) as! [Account]
+            let budgetDatas = try context.fetch(budgetRequest) as! [Budget]
+            
+//            print(accountDatas)
+//            print(budgetDatas)
+
+            if accountDatas.count <= 0 {
+                CreateDefaultAccount()
+            }
+
+            for budget in budgetDatas {
+                if budget_dict[budget.account!] == nil {
+                    budget_dict[budget.account!] = []
+                }
+
+                budget_dict[budget.account!]!.append(budget)
+            
+            }
+         } catch let error {
+             print("My Error \(error), \(error.localizedDescription)")
+         }
+    }
+    
+    static func AddBudget(account: UUID, amount: Int) -> Budget {
+        let context = persistentContainer.viewContext
+        let newBudget = Budget(context: context)
+        newBudget.id = UUID()
+        newBudget.account = account
+        newBudget.amount = Int16(amount)
+        newBudget.created = Date()
+        
+        budget_dict[account]!.append(newBudget)
+        context.insert(newBudget)
+        Save()
+        return newBudget
     }
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4CA5F2E42380EC7B003D6BE1 /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA5F2E32380EC7B003D6BE1 /* BottomBar.swift */; };
 		4CA5F2E72380F23C003D6BE1 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CA5F2E52380F23C003D6BE1 /* Model.xcdatamodeld */; };
+		4CADF0512383840800CE6245 /* BudgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CADF0502383840800CE6245 /* BudgetStore.swift */; };
 		4CBAA633237E9010005DFA8B /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBAA632237E9010005DFA8B /* HeaderView.swift */; };
 		4CF752EA237D146000D953C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF752E9237D146000D953C1 /* AppDelegate.swift */; };
 		4CF752EC237D146000D953C1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF752EB237D146000D953C1 /* SceneDelegate.swift */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		4CA5F2E32380EC7B003D6BE1 /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		4CA5F2E62380F23C003D6BE1 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4CADF0502383840800CE6245 /* BudgetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetStore.swift; sourceTree = "<group>"; };
 		4CBAA632237E9010005DFA8B /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		4CF752E6237D146000D953C1 /* Budgetor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Budgetor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CF752E9237D146000D953C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +53,7 @@
 			isa = PBXGroup;
 			children = (
 				4CF752FF237D244200D953C1 /* DataController.swift */,
+				4CADF0502383840800CE6245 /* BudgetStore.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				4CF752EC237D146000D953C1 /* SceneDelegate.swift in Sources */,
 				4CF752EA237D146000D953C1 /* AppDelegate.swift in Sources */,
 				4CF752EE237D146000D953C1 /* ContentView.swift in Sources */,
+				4CADF0512383840800CE6245 /* BudgetStore.swift in Sources */,
 				4CBAA633237E9010005DFA8B /* HeaderView.swift in Sources */,
 				4CF752FE237D1EFB00D953C1 /* BudgetRow.swift in Sources */,
 				4CA5F2E42380EC7B003D6BE1 /* BottomBar.swift in Sources */,
