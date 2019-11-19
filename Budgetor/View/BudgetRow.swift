@@ -11,6 +11,15 @@ import SwiftUI
 struct BudgetRow: View {
     var budget : Budget
     
+    func FormatedDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        
+        return dateFormatter.string(from: date)
+    }
+    
     var body: some View {
         HStack {
             Button (action: {}) {
@@ -19,7 +28,7 @@ struct BudgetRow: View {
                     Text("Lunch")
                         .font(.headline).foregroundColor(Color.white)
                     Spacer()
-                    Text("$ " + String(budget.amount)).font(.subheadline).foregroundColor(Color.white)
+                    Text("\(budget.created!.formated()) $ \(budget.amount)").font(.subheadline).foregroundColor(Color.white)
                 }
             }.padding(5)
         }.background(Color(red: 0.8, green: 0.3, blue: 0.2)).cornerRadius(8).padding(.horizontal, 5).listRowBackground(Color(red: 0.7, green: 0.2, blue: 0.15))

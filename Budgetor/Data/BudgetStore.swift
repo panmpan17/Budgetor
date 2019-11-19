@@ -11,11 +11,9 @@ import SwiftUI
 import Combine
 
 class BudgetStore : ObservableObject {
-    // var didChange = PassthroughSubject<Void, Never>()
     let objectWillChange = PassthroughSubject<Void, Never>()
-
-//    var observableList: Observable = Observable([])
     
+    var viewDate : Date
     var budgets : [Budget] {
         willSet {
             objectWillChange.send()
@@ -23,6 +21,17 @@ class BudgetStore : ObservableObject {
     }
     
     init(budgets: [Budget] = []) {
+        self.viewDate = Date()
         self.budgets = budgets
+    }
+    
+    func ChangeDate(_ newDate: Date) {
+        viewDate = newDate
+        budgets = DataController.GetAccountBudget(accountUUID: DataController.accountDatas[0].id!, date: viewDate)
+    }
+    
+    public func ChangeDate(_ amount: Int) {
+        viewDate = Calendar.current.date(byAdding: .day, value: amount, to: viewDate)!
+        budgets = DataController.GetAccountBudget(accountUUID: DataController.accountDatas[0].id!, date: viewDate)
     }
 }

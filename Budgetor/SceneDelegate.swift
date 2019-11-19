@@ -23,8 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UITableView.appearance().separatorColor = .clear
 
         DataController.DestroyAll()
-        DataController.SetupTestingData()
         DataController.Initial()
+        DataController.SetupTestingData()
         let contentView = ContentView()
 
         // Use a UIHostingController as window root view controller.

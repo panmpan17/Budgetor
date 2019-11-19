@@ -45,11 +45,18 @@ class DataController {
         return container
     }()
 
-    static func GetAccountBudget(accountUUID: UUID) -> [Budget] {
+    static func GetAccountBudget(accountUUID: UUID, date: Date) -> [Budget] {
         if budget_dict[accountUUID] == nil {
             budget_dict[accountUUID] = []
         }
-        return budget_dict[accountUUID]!;
+        
+        var budgets = [Budget]()
+        for budget in budget_dict[accountUUID]! {
+            if budget.created!.hasSame(.day, as: date) {
+                budgets.append(budget)
+            }
+        }
+        return budgets;
     }
     
     static func Save() {
@@ -103,7 +110,26 @@ class DataController {
     }
 
     static func SetupTestingData() {
+        if !initialed { return }
 
+        let context = persistentContainer.viewContext
+
+        var date = Date()
+        for i in 0...5 {
+            let newBudget = Budget(context: context)
+            newBudget.id = UUID()
+            newBudget.account = accountDatas[0].id!
+            newBudget.amount = Int16(Int16.random(in: 40...60) + Int16(i))
+            newBudget.created = date
+            date = Calendar.current.date(byAdding: .day, value: -1, to: date)!
+
+            context.insert(newBudget)
+
+            if (budget_dict[accountDatas[0].id!] == nil) { budget_dict[accountDatas[0].id!] = [] }
+            budget_dict[accountDatas[0].id!]!.append(newBudget)
+        }
+
+        Save();
     }
 
     static func Initial() {
@@ -117,10 +143,6 @@ class DataController {
 
             accountDatas = try context.fetch(accountRequest) as! [Account]
             let budgetDatas = try context.fetch(budgetRequest) as! [Budget]
-            
-//            print(accountDatas)
-//            print(budgetDatas)
-
             if accountDatas.count <= 0 {
                 CreateDefaultAccount()
             }

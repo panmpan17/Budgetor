@@ -8,6 +8,34 @@
 
 import SwiftUI
 
+import Foundation
+
+extension Date {
+
+    func totalDistance(from date: Date, resultIn component: Calendar.Component) -> Int? {
+        return Calendar.current.dateComponents([component], from: self, to: date).value(for: component)
+    }
+
+    func compare(with date: Date, only component: Calendar.Component) -> Int {
+        let days1 = Calendar.current.component(component, from: self)
+        let days2 = Calendar.current.component(component, from: date)
+        return days1 - days2
+    }
+
+    func hasSame(_ component: Calendar.Component, as date: Date) -> Bool {
+        return self.compare(with: date, only: component) == 0
+    }
+    
+    func formated(identifier: String = "ja_JP") -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: identifier)
+
+        return dateFormatter.string(from: self)
+    }
+}
+
 struct ContentView: View {
     var viewingDate : Date
     var focusedAccount : Account
@@ -18,7 +46,7 @@ struct ContentView: View {
 //        DataController.DestroyAll()
         DataController.Initial()
         focusedAccount = DataController.accountDatas[0];
-        budgetsStore = BudgetStore(budgets: DataController.GetAccountBudget(accountUUID: focusedAccount.id!))
+        budgetsStore = BudgetStore(budgets: DataController.GetAccountBudget(accountUUID: focusedAccount.id!, date: Date()))
         SetupUI()
     }
     
@@ -36,12 +64,19 @@ struct ContentView: View {
             HeaderView(self)
             
             List {
-                ForEach (budgetsStore.budgets, id: \.id) { budget in
+                ForEach (budgetsStore.budgets, id: \.objectID) { budget in
                     BudgetRow(budget: budget)
                 }
-            } //.onAppear {
-//                self.budgets = DataController.GetAccountBudget(accountUUID: self.focusedAccount.id!)
-//            }
+            }.gesture(DragGesture(minimumDistance: 50).onEnded { gesture in
+                let distance = gesture.location.x - gesture.startLocation.x
+                if abs(distance) > 100 {
+                    if distance < 0 {
+                        self.budgetsStore.ChangeDate(1)
+                    } else {
+                        self.budgetsStore.ChangeDate(-1)
+                    }
+                }
+            })
             
             BottomBar(self)
         }.background(Color(red: 0.7, green: 0.2, blue: 0.15))
