@@ -11,6 +11,18 @@ import SwiftUI
 struct BudgetRow: View {
     var budget : Budget
     
+    init() {
+        DataController.Initial()
+        budget = Budget(context: DataController.persistentContainer.viewContext)
+        budget.id = UUID()
+        budget.account = DataController.accountDatas[0].id!
+        budget.amount = 100
+        budget.created = Date()
+    }
+    init(budget: Budget) {
+        self.budget = budget
+    }
+    
     func FormatedDate(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -28,7 +40,7 @@ struct BudgetRow: View {
                     Text("Lunch")
                         .font(.headline).foregroundColor(Color.white)
                     Spacer()
-                    Text("\(budget.created!.formated()) $ \(budget.amount)").font(.subheadline).foregroundColor(Color.white)
+                    Text("$ \(budget.amount)").font(.subheadline).foregroundColor(Color.white)
                 }
             }.padding(5)
         }.background(Color(red: 0.8, green: 0.3, blue: 0.2)).cornerRadius(8).padding(.horizontal, 5).listRowBackground(Color(red: 0.7, green: 0.2, blue: 0.15))
@@ -37,7 +49,6 @@ struct BudgetRow: View {
 
 struct BudgetRow_Previews: PreviewProvider {
     static var previews: some View {
-//        BudgetRow(budget: BudgetStruct.New(account: UUID(), type: BudgetType.Lunch, amount: 100))
-        Text("Test")
+        BudgetRow()
     }
 }

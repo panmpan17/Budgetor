@@ -9,59 +9,72 @@
 import SwiftUI
 
 struct BottomBar: View {
-    var mainView : ContentView
-
-    init(_ _mainView : ContentView) {
-        mainView = _mainView
+    @ObservedObject var budgetStore: BudgetStore
+    
+    init() {
+        budgetStore = BudgetStore(isNone: true)
     }
-
+    init(_ store: BudgetStore) {
+        budgetStore = store
+    }
+    
     var body: some View {
-        HStack(alignment: .bottom) {
-            VStack (spacing: 0) {
-                HStack (spacing: 0) {
-                    Icon(sprite: "add", text: "Add", action: AddNewBudget)
-                    Spacer()
-                    Icon(sprite: "add", text: "Add", action: {})
-                    Spacer()
-                    Icon(sprite: "add", text: "Add", action: {})
+//        NavigationView {
+//            List{
+            HStack() {
+                VStack (spacing: 0) {
+                    HStack (spacing: 0) {
+                        Button(action: {
+                            self.budgetStore.view = "addbudget"
+                        }) {
+                            Icon(sprite: "add", text: "Add")
+                        }
+                        Spacer()
+                        Icon(sprite: "add", text: "Add")
+                        Spacer()
+                        Icon(sprite: "add", text: "Add")
+                    }
+                    
+                    
+                    HStack (spacing: 0) {
+                        Icon(sprite: "add", text: "Add")
+                        Spacer()
+                        Icon(sprite: "add", text: "Add")
+                        Spacer()
+                        Icon(sprite: "add", text: "Add")
+                    }
                 }
-                
-                
-                HStack (spacing: 0) {
-                    Icon(sprite: "add", text: "Add", action: {})
-                    Spacer()
-                    Icon(sprite: "add", text: "Add", action: {})
-                    Spacer()
-                    Icon(sprite: "add", text: "Add", action: {})
-                }
-            }
-        }.background(Color(red: 0.8, green: 0.3, blue: 0.2))
+            }.background(Color(red: 0.8, green: 0.3, blue: 0.2))
+//        }
+//        }
     }
     
     func AddNewBudget() {
-        mainView.AddBudget(account: mainView.focusedAccount.id!, amount: 100)
-//        mainView.AddBudget(account: mainView.focusedAccount.id!, amount: 100)
+//        mainView.AddBudget(account: mainView.budgetsStore.focusedAccount.id!, amount: 100)
     }
 }
 
 struct Icon: View {
     var sprite: String
     var text: String
-    var action : () -> ()
 
     var body: some View {
-        Button(action: action) {
+//        Button(action: action) {
             VStack (spacing: 3) {
-                Image(sprite).resizable().frame(width: 30, height: 30).aspectRatio(contentMode: .fit).foregroundColor(Color.white)
+                if sprite != "" {
+                    Image(sprite).resizable().frame(width: 30, height: 30).aspectRatio(contentMode: .fit).foregroundColor(Color.white)
+                }
                 Text(text).fontWeight(.bold).foregroundColor(Color.white)
             }.frame(width: 80, height: 80)
-        }
+//        }
     }
 }
 
 struct BottomBar_Previews: PreviewProvider {
     static var previews: some View {
-//        BottomBar()
-        Text("Test")
+//        NavigationView {
+            BottomBar()
+//        }
+//        Text("Test")
     }
 }

@@ -38,15 +38,13 @@ extension Date {
 
 struct ContentView: View {
     var viewingDate : Date
-    var focusedAccount : Account
     @ObservedObject var budgetsStore : BudgetStore
 
     init() {
         viewingDate = Date()
 //        DataController.DestroyAll()
         DataController.Initial()
-        focusedAccount = DataController.accountDatas[0];
-        budgetsStore = BudgetStore(budgets: DataController.GetAccountBudget(accountUUID: focusedAccount.id!, date: Date()))
+        budgetsStore = BudgetStore()
         SetupUI()
     }
     
@@ -60,25 +58,15 @@ struct ContentView: View {
     }
 
     var body: some View {
-        VStack(spacing: 6) {
-            HeaderView(self)
+        VStack(spacing: 0) {
+            HeaderView(budgetsStore)
             
-            List {
-                ForEach (budgetsStore.budgets, id: \.objectID) { budget in
-                    BudgetRow(budget: budget)
-                }
-            }.gesture(DragGesture(minimumDistance: 50).onEnded { gesture in
-                let distance = gesture.location.x - gesture.startLocation.x
-                if abs(distance) > 100 {
-                    if distance < 0 {
-                        self.budgetsStore.ChangeDate(1)
-                    } else {
-                        self.budgetsStore.ChangeDate(-1)
-                    }
-                }
-            })
-            
-            BottomBar(self)
+            if (budgetsStore.view == "main") {
+                ListView(budgetsStore: budgetsStore)
+                BottomBar(budgetsStore)
+            } else if (budgetsStore.view == "addbudget") {
+                AddBudgetView()
+            }
         }.background(Color(red: 0.7, green: 0.2, blue: 0.15))
     }
     
@@ -87,7 +75,26 @@ struct ContentView: View {
     }
 }
 
-//struck Tti
+struct ListView : View {
+    @ObservedObject var budgetsStore : BudgetStore
+
+    var body: some View {
+        List {
+            ForEach (budgetsStore.budgets, id: \.objectID) { budget in
+                BudgetRow(budget: budget)
+            }
+        }.gesture(DragGesture(minimumDistance: 50).onEnded { gesture in
+            let distance = gesture.location.x - gesture.startLocation.x
+            if abs(distance) > 100 {
+                if distance < 0 {
+                    self.budgetsStore.ChangeDate(1)
+                } else {
+                    self.budgetsStore.ChangeDate(-1)
+                }
+            }
+        })
+    }
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

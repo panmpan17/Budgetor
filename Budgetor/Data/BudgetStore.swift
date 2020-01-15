@@ -13,25 +13,43 @@ import Combine
 class BudgetStore : ObservableObject {
     let objectWillChange = PassthroughSubject<Void, Never>()
     
-    var viewDate : Date
+    var view : String {
+        willSet {
+            objectWillChange.send()
+        }
+    }
+    var viewDate : Date {
+        willSet {
+            objectWillChange.send()
+        }
+    }
+    var focusedAccount : Account
     var budgets : [Budget] {
         willSet {
             objectWillChange.send()
         }
     }
     
-    init(budgets: [Budget] = []) {
-        self.viewDate = Date()
-        self.budgets = budgets
+    init() {
+        viewDate = Date()
+        focusedAccount = DataController.accountDatas[0];
+        budgets = DataController.GetAccountBudget(accountUUID: focusedAccount.id!, date: viewDate)
+        view = "main"
+    }
+    init(isNone: Bool) {
+        viewDate = Date()
+        focusedAccount = Account()
+        budgets = []
+        view = "main"
     }
     
     func ChangeDate(_ newDate: Date) {
         viewDate = newDate
-        budgets = DataController.GetAccountBudget(accountUUID: DataController.accountDatas[0].id!, date: viewDate)
+        budgets = DataController.GetAccountBudget(accountUUID: focusedAccount.id!, date: viewDate)
     }
     
     public func ChangeDate(_ amount: Int) {
         viewDate = Calendar.current.date(byAdding: .day, value: amount, to: viewDate)!
-        budgets = DataController.GetAccountBudget(accountUUID: DataController.accountDatas[0].id!, date: viewDate)
+        budgets = DataController.GetAccountBudget(accountUUID: focusedAccount.id!, date: viewDate)
     }
 }
